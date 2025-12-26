@@ -1,0 +1,526 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trắc Nghiệm Điền Đáp Án</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Reset tối ưu tối đa cho mobile */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        html, body {
+            width: 100%;
+            height: 100%;
+            overflow-x: hidden;
+            position: fixed;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(#0f2027, #203a43, #2c5364);
+            color: #fff;
+            padding: 12px;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: none;
+        }
+        
+        /* Container đơn giản hóa */
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+        }
+        
+        /* Header đơn giản */
+        .header {
+            text-align: center;
+            margin-bottom: 15px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            z-index: 1;
+        }
+        
+        h1 {
+            font-size: 1.6rem;
+            margin-bottom: 5px;
+            color: #4facfe;
+            font-weight: bold;
+        }
+        
+        .subtitle {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        .instructions {
+            background: rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            line-height: 1.3;
+        }
+        
+        /* Quiz container với scroll tối ưu */
+        .quiz-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 70px;
+            padding-bottom: 10px;
+            max-height: calc(100vh - 250px);
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            scroll-behavior: smooth;
+        }
+        
+        /* Ẩn scrollbar nhưng vẫn scroll được */
+        .quiz-container::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .question-card {
+            background: rgba(255, 255, 255, 0.07);
+            border-radius: 15px;
+            padding: 15px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            break-inside: avoid;
+            transform: translateZ(0);
+            -webkit-transform: translateZ(0);
+        }
+        
+        .question-number {
+            display: inline-block;
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            text-align: center;
+            line-height: 30px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+        }
+        
+        .question-text {
+            font-size: 1rem;
+            margin-bottom: 12px;
+            line-height: 1.4;
+            color: #f0f8ff;
+        }
+        
+        /* Input tối ưu cho iOS */
+        .answer-input {
+            width: 100%;
+            padding: 14px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            -webkit-appearance: none;
+            appearance: none;
+            font-family: inherit;
+        }
+        
+        .answer-input:focus {
+            outline: none;
+            border-color: #4facfe;
+        }
+        
+        /* Phản hồi đơn giản */
+        .feedback {
+            margin-top: 8px;
+            font-size: 0.85rem;
+            padding: 8px 10px;
+            border-radius: 8px;
+            display: none;
+            line-height: 1.3;
+        }
+        
+        .feedback.correct {
+            display: block;
+            background: rgba(74, 222, 128, 0.15);
+            border-left: 3px solid #4ade80;
+        }
+        
+        .feedback.incorrect {
+            display: block;
+            background: rgba(248, 113, 113, 0.15);
+            border-left: 3px solid #f87171;
+        }
+        
+        /* Nút bấm cố định ở dưới */
+        .controls {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            padding: 12px;
+            background: rgba(15, 32, 39, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            display: flex;
+            gap: 10px;
+            z-index: 1000;
+        }
+        
+        .btn {
+            flex: 1;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 50px;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+        
+        .btn-submit {
+            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            color: white;
+        }
+        
+        .btn-reset {
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+        
+        /* Kết quả */
+        .result-container {
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 15px;
+            padding: 20px;
+            margin: 15px 0;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            display: none;
+        }
+        
+        .score {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #4facfe;
+            margin: 10px 0;
+            text-align: center;
+        }
+        
+        .score-text {
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 1rem;
+        }
+        
+        .result-details {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 15px;
+        }
+        
+        .result-item {
+            text-align: center;
+        }
+        
+        .result-value {
+            font-size: 1.8rem;
+            font-weight: bold;
+            margin-top: 5px;
+        }
+        
+        .correct-count { color: #4ade80; }
+        .incorrect-count { color: #f87171; }
+        .unanswered-count { color: #a5f3fc; }
+        
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 15px 0;
+            color: rgba(255, 255, 255, 0.5);
+            font-size: 0.8rem;
+        }
+        
+        /* Media query cho iPhone */
+        @media (max-width: 480px) {
+            body {
+                padding: 10px;
+            }
+            
+            .header {
+                padding: 12px;
+            }
+            
+            h1 {
+                font-size: 1.4rem;
+            }
+            
+            .quiz-container {
+                max-height: calc(100vh - 220px);
+                gap: 10px;
+            }
+            
+            .question-card {
+                padding: 12px;
+            }
+            
+            .btn {
+                padding: 14px;
+                font-size: 0.95rem;
+            }
+        }
+        
+        /* Landscape mode */
+        @media (orientation: landscape) and (max-height: 500px) {
+            .quiz-container {
+                max-height: calc(100vh - 180px);
+            }
+            
+            .controls {
+                padding: 8px;
+            }
+            
+            .btn {
+                min-height: 40px;
+                padding: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1><i class="fas fa-pen-alt"></i> TRẮC NGHIỆM ĐIỀN ĐÁP ÁN</h1>
+            <p class="subtitle">Lịch sử & Địa lý Việt Nam - Thế giới</p>
+            <div class="instructions">
+                <p><i class="fas fa-info-circle"></i> Điền đáp án vào ô trống. Không phân biệt hoa thường.</p>
+            </div>
+        </header>
+        
+        <div class="quiz-container" id="quizContainer">
+            <!-- Câu hỏi sẽ được thêm bằng JS -->
+        </div>
+        
+        <div class="result-container" id="resultContainer">
+            <h2><i class="fas fa-medal"></i> KẾT QUẢ</h2>
+            <div class="score" id="score">0/28</div>
+            <p class="score-text" id="scoreText"></p>
+            
+            <div class="result-details">
+                <div class="result-item">
+                    <p>Đúng</p>
+                    <div class="result-value correct-count" id="correctCount">0</div>
+                </div>
+                <div class="result-item">
+                    <p>Sai</p>
+                    <div class="result-value incorrect-count" id="incorrectCount">0</div>
+                </div>
+                <div class="result-item">
+                    <p>Chưa trả lời</p>
+                    <div class="result-value unanswered-count" id="unansweredCount">28</div>
+                </div>
+            </div>
+        </div>
+        
+        <footer class="footer">
+            <p>Tối ưu cho iPhone - Chạy trực tiếp trên Safari</p>
+        </footer>
+    </div>
+    
+    <div class="controls">
+        <button class="btn btn-submit" id="submitBtn">
+            <i class="fas fa-paper-plane"></i> Nộp Bài
+        </button>
+        <button class="btn btn-reset" id="resetBtn">
+            <i class="fas fa-redo"></i> Làm Lại
+        </button>
+    </div>
+
+    <script>
+        // Dữ liệu câu hỏi
+        const questions = [
+            { id: 1, text: "Năm 1940, Nhật Bản công bố thuyết Đại Đông Á để:", answer: "Tạo cơ sở xâm lược các nước ĐNÁ", keywords: ["xâm lược", "ĐNÁ", "cơ sở"] },
+            { id: 2, text: "Tháng 6 - 1919. Nguyễn Tất Thành gửi bản 'Yêu sách của nhân dân An Nam' tới:", answer: "Hội nghị Véc-xai", keywords: ["Véc-xai", "Hội nghị"] },
+            { id: 3, text: "Ngày 19 - 8 - 1945, khởi nghĩa giành chính quyền thắng lợi ở địa phương nào:", answer: "Hà Nội", keywords: ["Hà Nội"] },
+            { id: 4, text: "Chiến tranh lạnh là cuộc đối đầu trực tiếp giữa:", answer: "Mỹ và Liên Xô", keywords: ["Mỹ", "Liên Xô", "Mĩ"] },
+            { id: 5, text: "Chính sách đối ngoại của Liên Xô sau Chiến tranh thế giới thứ hai là:", answer: "Bảo vệ hòa bình thế giới", keywords: ["hòa bình", "bảo vệ"] },
+            { id: 6, text: "Sự kiện đánh dấu chế độ Xã hội chủ nghĩa ở Liên Xô sụp đổ:", answer: "Goóc-ba-chốp từ chức Tổng thống", keywords: ["Goóc-ba-chốp", "từ chức"] },
+            { id: 7, text: "Kế hoạch Mác-san (Marshall) mà Mĩ đề ra năm 1947 còn được gọi là:", answer: "Kế hoạch phục hưng châu Âu", keywords: ["phục hưng", "châu Âu"] },
+            { id: 8, text: "Liên minh châu Âu (EU) là tổ chức liên kết:", answer: "Chính trị - kinh tế", keywords: ["Chính trị", "kinh tế"] },
+            { id: 9, text: "Một trong những khu vực được Hội nghị I-an-ta qui định thuộc phạm vi ảnh hưởng của Mỹ là:", answer: "Tây Âu", keywords: ["Tây Âu"] },
+            { id: 10, text: "Một trong những biểu tượng cho sự kết thúc Chiến tranh lạnh là:", answer: "Bức tường Béc-lin sụp đổ (11/1989)", keywords: ["Béc-lin", "tường", "sụp đổ"] },
+            { id: 11, text: "Thời cơ khách quan thuận lợi của Cách mạng tháng Tám là sự kiện:", answer: "Phát xít Nhật đầu hàng Đồng minh vô điều kiện (15/8/1945)", keywords: ["Nhật đầu hàng", "15/8/1945"] },
+            { id: 12, text: "Một trong những khu vực được Hội nghị I-an-ta qui định thuộc phạm vi ảnh hưởng của Liên Xô là:", answer: "Đông Âu", keywords: ["Đông Âu"] },
+            { id: 13, text: "Năm 1961, trong lĩnh vực khoa học - kĩ thuật, Liên Xô đã đạt được thành tựu kì diệu là:", answer: "Phóng thành công tàu vũ trụ bay vòng quanh trái đất", keywords: ["tàu vũ trụ", "bay vòng quanh"] },
+            { id: 14, text: "Nước ở châu Âu không phát triển theo con đường xã hội chủ nghĩa ở nửa sau thế kỉ XX:", answer: "Cộng hòa Liên bang Đức", keywords: ["Đức", "Liên bang Đức"] },
+            { id: 15, text: "Sau Chiến tranh thế giới thứ hai, các nước Tây Âu nhận viện trợ từ Mĩ trong khuôn khổ 'Kế hoạch Mác-san' nhằm mục đích:", answer: "Khôi phục kinh tế", keywords: ["khôi phục", "kinh tế"] },
+            { id: 16, text: "Các nước Tây Âu tham gia vào khối quân sự Bắc Đại Tây Dương do Mỹ lập ra nhằm mục đích:", answer: "Chống lại Liên Xô và các nước XHCN Đông Âu", keywords: ["chống lại", "Liên Xô"] },
+            { id: 17, text: "Sau sáp nhập, hiện nay vùng trung du và miền núi phía Bắc nước ta gồm:", answer: "9 tỉnh", keywords: ["9", "chín"] },
+            { id: 18, text: "Cây công nghiệp lâu năm quan trọng nhất ở Trung du và miền núi phía Bắc là:", answer: "Cây chè (trà)", keywords: ["chè", "trà"] },
+            { id: 19, text: "Loài gia súc của vùng Trung du miền núi phía Bắc chiếm tỉ trọng cao nhất so với cả nước là:", answer: "Trâu", keywords: ["trâu"] },
+            { id: 20, text: "Quốc lộ 1 là tuyến đường bộ huyết mạch dài nhất nước ta chạy từ:", answer: "Lạng Sơn đến Cà Mau", keywords: ["Lạng Sơn", "Cà Mau"] },
+            { id: 21, text: "Đường sắt Thống Nhất nối liền các tỉnh/thành:", answer: "Hà Nội - Thành phố Hồ Chí Minh", keywords: ["Hà Nội", "Hồ Chí Minh"] },
+            { id: 22, text: "Nước ta chủ yếu nhập khẩu các sản phẩm:", answer: "Máy móc thiết bị, nguyên liệu và nhiên liệu", keywords: ["máy móc", "nguyên liệu"] },
+            { id: 23, text: "Vùng có các trung tâm thương mại lớn nhất cả nước:", answer: "Đông Nam Bộ", keywords: ["Đông Nam Bộ"] },
+            { id: 24, text: "Các nhà máy thủy điện Sơn La, Hòa Bình nằm trên dòng sông:", answer: "Sông Đà", keywords: ["sông Đà", "Đà"] },
+            { id: 25, text: "Hai trung tâm thương mại, dịch vụ lớn nhất nước ta:", answer: "Hà Nội và Thành phố Hồ Chí Minh", keywords: ["Hà Nội", "Hồ Chí Minh"] },
+            { id: 26, text: "Loại hình bưu chính - viễn thông phát triển nhanh nhất nước ta hiện nay:", answer: "Viễn thông di động", keywords: ["di động"] },
+            { id: 27, text: "Tính đa dạng về cơ cấu sản phẩm nông nghiệp của Trung du và miền núi phía Bắc thể hiện ở chỗ có cả:", answer: "cây ôn đới, cây cận nhiệt và cây nhiệt đới", keywords: ["ôn đới", "cận nhiệt", "nhiệt đới"] },
+            { id: 28, text: "Trung du và miền núi phía Bắc có thế mạnh phát triển các ngành công nghiệp:", answer: "khai khoáng và thủy điện", keywords: ["khai khoáng", "thủy điện"] }
+        ];
+
+        // Tạo câu hỏi đơn giản
+        function renderQuestions() {
+            const container = document.getElementById('quizContainer');
+            container.innerHTML = '';
+            
+            questions.forEach((q, i) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.innerHTML = `
+                    <div class="question-number">${i + 1}</div>
+                    <div class="question-text">${q.text}</div>
+                    <input type="text" class="answer-input" id="answer-${q.id}" placeholder="Nhập đáp án...">
+                    <div class="feedback" id="feedback-${q.id}"></div>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        // Hàm kiểm tra đáp án đơn giản
+        function checkAnswer(userAnswer, correctAnswer, keywords) {
+            if (!userAnswer) return false;
+            
+            // Chuẩn hóa
+            userAnswer = userAnswer.toLowerCase().trim();
+            correctAnswer = correctAnswer.toLowerCase().trim();
+            
+            // Kiểm tra trực tiếp
+            if (userAnswer === correctAnswer) return true;
+            
+            // Kiểm tra từ khóa
+            for (const keyword of keywords) {
+                if (userAnswer.includes(keyword.toLowerCase())) {
+                    return true;
+                }
+            }
+            
+            return false;
+        }
+
+        // Sự kiện nộp bài
+        document.getElementById('submitBtn').onclick = function() {
+            let correct = 0, incorrect = 0, unanswered = 0;
+            
+            questions.forEach(q => {
+                const input = document.getElementById(`answer-${q.id}`);
+                const feedback = document.getElementById(`feedback-${q.id}`);
+                const answer = input.value.trim();
+                
+                if (!answer) {
+                    unanswered++;
+                    feedback.style.display = 'none';
+                    return;
+                }
+                
+                const isCorrect = checkAnswer(answer, q.answer, q.keywords);
+                
+                if (isCorrect) {
+                    correct++;
+                    feedback.className = 'feedback correct';
+                    feedback.textContent = `✓ Đúng: ${q.answer}`;
+                } else {
+                    incorrect++;
+                    feedback.className = 'feedback incorrect';
+                    feedback.textContent = `✗ Sai. Đáp án: ${q.answer}`;
+                }
+                
+                feedback.style.display = 'block';
+            });
+            
+            // Hiển thị kết quả
+            document.getElementById('score').textContent = `${correct}/${questions.length}`;
+            document.getElementById('correctCount').textContent = correct;
+            document.getElementById('incorrectCount').textContent = incorrect;
+            document.getElementById('unansweredCount').textContent = unanswered;
+            
+            // Thông báo kết quả
+            let message = '';
+            if (correct === questions.length) message = '🎉 Xuất sắc!';
+            else if (correct >= questions.length * 0.7) message = '👍 Rất tốt!';
+            else if (correct >= questions.length * 0.5) message = '👌 Khá tốt!';
+            else message = '💪 Cần cố gắng hơn!';
+            
+            document.getElementById('scoreText').textContent = message;
+            document.getElementById('resultContainer').style.display = 'block';
+            
+            // Cuộn đến kết quả
+            setTimeout(() => {
+                document.getElementById('resultContainer').scrollIntoView({ 
+                    behavior: 'smooth',
+                    block: 'start'
+                });
+            }, 100);
+        };
+
+        // Sự kiện làm lại
+        document.getElementById('resetBtn').onclick = function() {
+            questions.forEach(q => {
+                const input = document.getElementById(`answer-${q.id}`);
+                const feedback = document.getElementById(`feedback-${q.id}`);
+                input.value = '';
+                feedback.style.display = 'none';
+            });
+            
+            document.getElementById('resultContainer').style.display = 'none';
+            
+            // Cuộn lên đầu
+            setTimeout(() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }, 100);
+        };
+
+        // Khởi tạo
+        renderQuestions();
+        
+        // Ngăn zoom không mong muốn trên iOS
+        document.addEventListener('touchstart', function(e) {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        // Ngăn refresh bằng gesture trên iOS
+        document.addEventListener('touchmove', function(e) {
+            if (e.touches.length > 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+        
+        // Tối ưu cho bàn phím iOS
+        document.addEventListener('focusin', function(e) {
+            if (e.target.classList.contains('answer-input')) {
+                setTimeout(() => {
+                    e.target.scrollIntoView({ 
+                        block: 'center',
+                        behavior: 'smooth'
+                    });
+                }, 300);
+            }
+        });
+    </script>
+</body>
+</html>
