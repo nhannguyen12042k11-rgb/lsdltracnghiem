@@ -4,9 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Trắc Nghiệm Điền Đáp Án</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        /* Reset tối ưu tối đa cho mobile */
+        /* Reset */
         * {
             margin: 0;
             padding: 0;
@@ -14,186 +13,147 @@
             -webkit-tap-highlight-color: transparent;
         }
         
-        html, body {
-            width: 100%;
-            height: 100%;
-            overflow-x: hidden;
-            position: fixed;
-        }
-        
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(#0f2027, #203a43, #2c5364);
-            color: #fff;
-            padding: 12px;
-            -webkit-overflow-scrolling: touch;
-            overscroll-behavior: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #2c3e50;
+            color: white;
+            line-height: 1.5;
         }
         
-        /* Container đơn giản hóa */
+        /* Container */
         .container {
-            max-width: 100%;
+            max-width: 800px;
             margin: 0 auto;
+            padding: 20px;
         }
         
-        /* Header đơn giản */
+        /* Header */
         .header {
             text-align: center;
-            margin-bottom: 15px;
-            padding: 15px;
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            z-index: 1;
+            margin-bottom: 30px;
+            padding: 20px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
         }
         
-        h1 {
-            font-size: 1.6rem;
+        .title {
+            font-size: 24px;
+            color: #3498db;
             margin-bottom: 5px;
-            color: #4facfe;
-            font-weight: bold;
         }
         
         .subtitle {
-            font-size: 0.9rem;
-            opacity: 0.9;
-            margin-bottom: 10px;
+            font-size: 14px;
+            color: #bdc3c7;
         }
         
-        .instructions {
-            background: rgba(0, 0, 0, 0.2);
-            padding: 10px;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            line-height: 1.3;
-        }
-        
-        /* Quiz container với scroll tối ưu */
-        .quiz-container {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin-bottom: 70px;
-            padding-bottom: 10px;
-            max-height: calc(100vh - 250px);
-            overflow-y: auto;
-            -webkit-overflow-scrolling: touch;
-            scroll-behavior: smooth;
-        }
-        
-        /* Ẩn scrollbar nhưng vẫn scroll được */
-        .quiz-container::-webkit-scrollbar {
-            display: none;
+        /* Quiz Section */
+        .quiz-section {
+            margin-bottom: 80px;
         }
         
         .question-card {
-            background: rgba(255, 255, 255, 0.07);
-            border-radius: 15px;
-            padding: 15px;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            position: relative;
-            break-inside: avoid;
-            transform: translateZ(0);
-            -webkit-transform: translateZ(0);
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+        }
+        
+        .question-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
         }
         
         .question-number {
-            display: inline-block;
-            background: linear-gradient(45deg, #4facfe, #00f2fe);
             width: 30px;
             height: 30px;
+            background: #3498db;
+            color: white;
             border-radius: 50%;
-            text-align: center;
-            line-height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
             font-weight: bold;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
+            margin-right: 10px;
         }
         
         .question-text {
-            font-size: 1rem;
-            margin-bottom: 12px;
-            line-height: 1.4;
-            color: #f0f8ff;
+            font-size: 16px;
+            flex: 1;
         }
         
-        /* Input tối ưu cho iOS */
         .answer-input {
             width: 100%;
-            padding: 14px;
+            padding: 12px;
             background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 255, 255, 0.15);
-            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
             color: white;
-            font-size: 1rem;
-            -webkit-appearance: none;
-            appearance: none;
-            font-family: inherit;
+            font-size: 15px;
+            margin-top: 10px;
         }
         
         .answer-input:focus {
             outline: none;
-            border-color: #4facfe;
+            border-color: #3498db;
         }
         
-        /* Phản hồi đơn giản */
         .feedback {
-            margin-top: 8px;
-            font-size: 0.85rem;
-            padding: 8px 10px;
-            border-radius: 8px;
+            margin-top: 10px;
+            padding: 10px;
+            border-radius: 5px;
+            font-size: 14px;
             display: none;
-            line-height: 1.3;
         }
         
         .feedback.correct {
+            background: rgba(46, 204, 113, 0.2);
+            border-left: 3px solid #2ecc71;
             display: block;
-            background: rgba(74, 222, 128, 0.15);
-            border-left: 3px solid #4ade80;
         }
         
         .feedback.incorrect {
+            background: rgba(231, 76, 60, 0.2);
+            border-left: 3px solid #e74c3c;
             display: block;
-            background: rgba(248, 113, 113, 0.15);
-            border-left: 3px solid #f87171;
         }
         
-        /* Nút bấm cố định ở dưới */
+        /* Controls */
         .controls {
             position: fixed;
             bottom: 0;
             left: 0;
             right: 0;
-            padding: 12px;
-            background: rgba(15, 32, 39, 0.95);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            background: #34495e;
+            padding: 15px;
             display: flex;
             gap: 10px;
-            z-index: 1000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.2);
         }
         
         .btn {
             flex: 1;
-            padding: 16px;
+            padding: 14px;
             border: none;
-            border-radius: 12px;
-            font-size: 1rem;
-            font-weight: 600;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 500;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 8px;
-            min-height: 50px;
-            -webkit-user-select: none;
-            user-select: none;
+            transition: opacity 0.2s;
+        }
+        
+        .btn:active {
+            opacity: 0.8;
         }
         
         .btn-submit {
-            background: linear-gradient(45deg, #4facfe, #00f2fe);
+            background: #3498db;
             color: white;
         }
         
@@ -202,100 +162,130 @@
             color: white;
         }
         
-        /* Kết quả */
-        .result-container {
-            background: rgba(255, 255, 255, 0.08);
-            border-radius: 15px;
-            padding: 20px;
-            margin: 15px 0;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+        /* Results */
+        .results {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            padding: 25px;
+            margin: 20px 0;
+            text-align: center;
             display: none;
         }
         
+        .results-title {
+            color: #3498db;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+        
         .score {
-            font-size: 2.5rem;
+            font-size: 48px;
             font-weight: bold;
-            color: #4facfe;
-            margin: 10px 0;
-            text-align: center;
+            color: #3498db;
+            margin: 15px 0;
         }
         
         .score-text {
-            text-align: center;
-            margin-bottom: 15px;
-            font-size: 1rem;
+            color: #bdc3c7;
+            margin-bottom: 25px;
         }
         
-        .result-details {
+        .stats {
             display: flex;
             justify-content: space-around;
-            margin-top: 15px;
+            margin-top: 20px;
         }
         
-        .result-item {
+        .stat-item {
             text-align: center;
         }
         
-        .result-value {
-            font-size: 1.8rem;
+        .stat-value {
+            font-size: 28px;
             font-weight: bold;
-            margin-top: 5px;
+            margin: 5px 0;
         }
         
-        .correct-count { color: #4ade80; }
-        .incorrect-count { color: #f87171; }
-        .unanswered-count { color: #a5f3fc; }
+        .stat-label {
+            font-size: 14px;
+            color: #bdc3c7;
+        }
+        
+        .correct .stat-value {
+            color: #2ecc71;
+        }
+        
+        .incorrect .stat-value {
+            color: #e74c3c;
+        }
+        
+        .unanswered .stat-value {
+            color: #f39c12;
+        }
         
         /* Footer */
         .footer {
             text-align: center;
-            padding: 15px 0;
-            color: rgba(255, 255, 255, 0.5);
-            font-size: 0.8rem;
+            padding: 20px;
+            color: #7f8c8d;
+            font-size: 14px;
+            margin-top: 30px;
         }
         
-        /* Media query cho iPhone */
-        @media (max-width: 480px) {
-            body {
-                padding: 10px;
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
             }
             
             .header {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .title {
+                font-size: 20px;
+            }
+            
+            .question-card {
+                padding: 15px;
+            }
+            
+            .controls {
                 padding: 12px;
             }
             
-            h1 {
-                font-size: 1.4rem;
+            .btn {
+                padding: 12px;
+                font-size: 15px;
             }
             
-            .quiz-container {
-                max-height: calc(100vh - 220px);
-                gap: 10px;
+            .score {
+                font-size: 40px;
+            }
+            
+            .stats {
+                flex-direction: column;
+                gap: 15px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .container {
+                padding: 10px;
             }
             
             .question-card {
                 padding: 12px;
             }
             
-            .btn {
-                padding: 14px;
-                font-size: 0.95rem;
-            }
-        }
-        
-        /* Landscape mode */
-        @media (orientation: landscape) and (max-height: 500px) {
-            .quiz-container {
-                max-height: calc(100vh - 180px);
+            .question-text {
+                font-size: 15px;
             }
             
-            .controls {
-                padding: 8px;
-            }
-            
-            .btn {
-                min-height: 40px;
+            .answer-input {
                 padding: 10px;
+                font-size: 14px;
             }
         }
     </style>
@@ -303,49 +293,44 @@
 <body>
     <div class="container">
         <header class="header">
-            <h1><i class="fas fa-pen-alt"></i> TRẮC NGHIỆM ĐIỀN ĐÁP ÁN</h1>
+            <h1 class="title">Trắc Nghiệm Điền Đáp Án</h1>
             <p class="subtitle">Lịch sử & Địa lý Việt Nam - Thế giới</p>
-            <div class="instructions">
-                <p><i class="fas fa-info-circle"></i> Điền đáp án vào ô trống. Không phân biệt hoa thường.</p>
-            </div>
         </header>
         
-        <div class="quiz-container" id="quizContainer">
-            <!-- Câu hỏi sẽ được thêm bằng JS -->
-        </div>
-        
-        <div class="result-container" id="resultContainer">
-            <h2><i class="fas fa-medal"></i> KẾT QUẢ</h2>
-            <div class="score" id="score">0/28</div>
-            <p class="score-text" id="scoreText"></p>
-            
-            <div class="result-details">
-                <div class="result-item">
-                    <p>Đúng</p>
-                    <div class="result-value correct-count" id="correctCount">0</div>
-                </div>
-                <div class="result-item">
-                    <p>Sai</p>
-                    <div class="result-value incorrect-count" id="incorrectCount">0</div>
-                </div>
-                <div class="result-item">
-                    <p>Chưa trả lời</p>
-                    <div class="result-value unanswered-count" id="unansweredCount">28</div>
+        <main class="quiz-section">
+            <div id="questionsContainer"></div>
+            <div class="results" id="resultsContainer">
+                <h2 class="results-title">Kết Quả Bài Làm</h2>
+                <div class="score" id="score">0/28</div>
+                <p class="score-text" id="scoreMessage"></p>
+                <div class="stats">
+                    <div class="stat-item correct">
+                        <div class="stat-value" id="correctCount">0</div>
+                        <div class="stat-label">Đúng</div>
+                    </div>
+                    <div class="stat-item incorrect">
+                        <div class="stat-value" id="incorrectCount">0</div>
+                        <div class="stat-label">Sai</div>
+                    </div>
+                    <div class="stat-item unanswered">
+                        <div class="stat-value" id="unansweredCount">28</div>
+                        <div class="stat-label">Chưa trả lời</div>
+                    </div>
                 </div>
             </div>
-        </div>
+        </main>
         
         <footer class="footer">
-            <p>Tối ưu cho iPhone - Chạy trực tiếp trên Safari</p>
+            <p>Điền đáp án vào ô trống - Không phân biệt chữ hoa/thường</p>
         </footer>
     </div>
     
     <div class="controls">
         <button class="btn btn-submit" id="submitBtn">
-            <i class="fas fa-paper-plane"></i> Nộp Bài
+            <span>📤</span> Nộp Bài
         </button>
         <button class="btn btn-reset" id="resetBtn">
-            <i class="fas fa-redo"></i> Làm Lại
+            <span>🔄</span> Làm Lại
         </button>
     </div>
 
@@ -382,33 +367,35 @@
             { id: 28, text: "Trung du và miền núi phía Bắc có thế mạnh phát triển các ngành công nghiệp:", answer: "khai khoáng và thủy điện", keywords: ["khai khoáng", "thủy điện"] }
         ];
 
-        // Tạo câu hỏi đơn giản
-        function renderQuestions() {
-            const container = document.getElementById('quizContainer');
-            container.innerHTML = '';
+        // Khởi tạo
+        function initQuiz() {
+            const container = document.getElementById('questionsContainer');
+            let html = '';
             
-            questions.forEach((q, i) => {
-                const card = document.createElement('div');
-                card.className = 'question-card';
-                card.innerHTML = `
-                    <div class="question-number">${i + 1}</div>
-                    <div class="question-text">${q.text}</div>
-                    <input type="text" class="answer-input" id="answer-${q.id}" placeholder="Nhập đáp án...">
-                    <div class="feedback" id="feedback-${q.id}"></div>
+            questions.forEach((q, index) => {
+                html += `
+                    <div class="question-card">
+                        <div class="question-header">
+                            <div class="question-number">${index + 1}</div>
+                            <div class="question-text">${q.text}</div>
+                        </div>
+                        <input type="text" class="answer-input" id="answer-${q.id}" placeholder="Nhập đáp án...">
+                        <div class="feedback" id="feedback-${q.id}"></div>
+                    </div>
                 `;
-                container.appendChild(card);
             });
+            
+            container.innerHTML = html;
         }
 
-        // Hàm kiểm tra đáp án đơn giản
+        // Kiểm tra đáp án
         function checkAnswer(userAnswer, correctAnswer, keywords) {
             if (!userAnswer) return false;
             
-            // Chuẩn hóa
             userAnswer = userAnswer.toLowerCase().trim();
             correctAnswer = correctAnswer.toLowerCase().trim();
             
-            // Kiểm tra trực tiếp
+            // Kiểm tra trùng khớp
             if (userAnswer === correctAnswer) return true;
             
             // Kiểm tra từ khóa
@@ -421,7 +408,7 @@
             return false;
         }
 
-        // Sự kiện nộp bài
+        // Xử lý nộp bài
         document.getElementById('submitBtn').onclick = function() {
             let correct = 0, incorrect = 0, unanswered = 0;
             
@@ -452,31 +439,32 @@
             });
             
             // Hiển thị kết quả
-            document.getElementById('score').textContent = `${correct}/${questions.length}`;
+            const total = questions.length;
+            document.getElementById('score').textContent = `${correct}/${total}`;
             document.getElementById('correctCount').textContent = correct;
             document.getElementById('incorrectCount').textContent = incorrect;
             document.getElementById('unansweredCount').textContent = unanswered;
             
-            // Thông báo kết quả
+            // Thông điệp
             let message = '';
-            if (correct === questions.length) message = '🎉 Xuất sắc!';
-            else if (correct >= questions.length * 0.7) message = '👍 Rất tốt!';
-            else if (correct >= questions.length * 0.5) message = '👌 Khá tốt!';
-            else message = '💪 Cần cố gắng hơn!';
+            if (correct === total) message = '🎉 Xuất sắc! Bạn đã trả lời đúng tất cả!';
+            else if (correct >= total * 0.8) message = '👍 Rất tốt! Kiến thức vững vàng!';
+            else if (correct >= total * 0.6) message = '👌 Khá tốt! Cần ôn tập thêm!';
+            else message = '💪 Cần cố gắng hơn! Xem lại đáp án!';
             
-            document.getElementById('scoreText').textContent = message;
-            document.getElementById('resultContainer').style.display = 'block';
+            document.getElementById('scoreMessage').textContent = message;
+            document.getElementById('resultsContainer').style.display = 'block';
             
             // Cuộn đến kết quả
             setTimeout(() => {
-                document.getElementById('resultContainer').scrollIntoView({ 
+                document.getElementById('resultsContainer').scrollIntoView({ 
                     behavior: 'smooth',
                     block: 'start'
                 });
             }, 100);
         };
 
-        // Sự kiện làm lại
+        // Xử lý làm lại
         document.getElementById('resetBtn').onclick = function() {
             questions.forEach(q => {
                 const input = document.getElementById(`answer-${q.id}`);
@@ -485,7 +473,7 @@
                 feedback.style.display = 'none';
             });
             
-            document.getElementById('resultContainer').style.display = 'none';
+            document.getElementById('resultsContainer').style.display = 'none';
             
             // Cuộn lên đầu
             setTimeout(() => {
@@ -493,34 +481,8 @@
             }, 100);
         };
 
-        // Khởi tạo
-        renderQuestions();
-        
-        // Ngăn zoom không mong muốn trên iOS
-        document.addEventListener('touchstart', function(e) {
-            if (e.touches.length > 1) {
-                e.preventDefault();
-            }
-        }, { passive: false });
-        
-        // Ngăn refresh bằng gesture trên iOS
-        document.addEventListener('touchmove', function(e) {
-            if (e.touches.length > 1) {
-                e.preventDefault();
-            }
-        }, { passive: false });
-        
-        // Tối ưu cho bàn phím iOS
-        document.addEventListener('focusin', function(e) {
-            if (e.target.classList.contains('answer-input')) {
-                setTimeout(() => {
-                    e.target.scrollIntoView({ 
-                        block: 'center',
-                        behavior: 'smooth'
-                    });
-                }, 300);
-            }
-        });
+        // Tải quiz khi trang sẵn sàng
+        document.addEventListener('DOMContentLoaded', initQuiz);
     </script>
 </body>
 </html>
